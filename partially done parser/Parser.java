@@ -38,7 +38,8 @@ public class Parser{
 
 			while ((line = br.readLine()) != null){
 
-				while(line.isEmpty()){line = br.readLine();}
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
 
 
 
@@ -107,10 +108,12 @@ public class Parser{
 	private String readToNearTask(BufferedReader br,  TNTelement tntElement, String line){
 		int i = 0;
 		try{
-			String exitString = "too-near tasks:";
+			String exitString = "machine penalties:";
 			while (!(line = br.readLine()).equals(exitString)){
-
-				while(line.isEmpty()){line = br.readLine();}
+				
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
+				
 
 				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
 
@@ -121,8 +124,8 @@ public class Parser{
 					//  if (!fpa.containsKey(matcher.group(1)) && !fpa.containsValue(matcher.group(2)))
 					//  {
 					//  fpa.put(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					System.out.println(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo());
-					;
+					System.out.println(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo()); 
+					
 					i++;
 				}else{
 					//TODO partial assignment
@@ -134,9 +137,9 @@ public class Parser{
 					return null;
 
 				}
-
+				
 			}
-			while(line.isEmpty()){line = br.readLine();}
+			
 
 		}catch(IOException e){
 
@@ -144,16 +147,20 @@ public class Parser{
 		return line;
 	}
 
+	
+	
 	private String readForbiddenMachine(BufferedReader br, FMelement fmElement, String line){
 		int i = 0;
 		try{
 			String exitString = "too-near tasks:";
 			while (!(line = br.readLine()).equals(exitString)){
 
-				while(line.isEmpty()){line = br.readLine();}
-
-				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)")).matcher(line);
-
+				
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
+				
+				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
+				
 				if (matcher.matches()){
 
 					fmElement = new FMelement(Integer.parseInt(matcher.group(1)), matcher.group(2));
@@ -174,9 +181,9 @@ public class Parser{
 					return null;
 
 				}
-
+				while(line.isEmpty()){line = br.readLine();}
 			}
-			while(line.isEmpty()){line = br.readLine();}
+			
 
 		}catch(IOException e){
 
@@ -198,7 +205,9 @@ public class Parser{
 				//if(line.equals(exitString)){
 				//br.reset();
 				//  return line;}
-				while(line.isEmpty()){line = br.readLine();}
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
+				
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)")).matcher(line);
 				if (matcher.matches()){
 					if (!fpa.containsKey(matcher.group(1)) && !fpa.containsValue(matcher.group(2)))
