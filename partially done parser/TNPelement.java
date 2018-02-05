@@ -3,6 +3,7 @@ public class TNPelement{
   private  String taskTwo;
   private  long penalty;
 
+  //TOO NEAR PENALTY
   public TNPelement(String taskOne, String taskTwo, long penalty){
     this.taskOne = taskOne;
     this.taskTwo = taskTwo;
