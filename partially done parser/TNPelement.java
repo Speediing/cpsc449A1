@@ -1,20 +1,20 @@
 public class TNPelement{
   private  String taskOne;
   private  String taskTwo;
-  private  int penalty;
+  private  long penalty;
 
-  public TNPelement(String taskOne, String taskTwo, int penalty){
+  public TNPelement(String taskOne, String taskTwo, long penalty){
     this.taskOne = taskOne;
     this.taskTwo = taskTwo;
     this.penalty = penalty;
   }
-  public String getTaskOne(){
+  public String getTNPtaskOne(){
     return this.taskOne;
   }
-  public String getTaskTwo(){
+  public String getTNPtaskTwo(){
     return this.taskTwo;
   }
-  public int getPenalty(){
+  public long getTNPpenalty(){
     return this.penalty;
   }
 }

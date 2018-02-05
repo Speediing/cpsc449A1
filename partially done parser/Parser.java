@@ -16,10 +16,10 @@ public class Parser{
 	public static ArrayList<FMelement> fpArray = new ArrayList<FMelement>();
 	public static ArrayList<TNTelement> tntArray = new ArrayList<TNTelement>();
 	//public static ArrayList<FPArray> fpArray = new ArrayList<FPArray>();
-	/*public  ArrayList<TNParray> tnpArray = new ArrayList<TNParray>();
-  public  ArrayList<String> fileLines = new ArrayList<String>();
-	 */
-	
+	public  ArrayList<TNPelement> tnpArray = new ArrayList<TNPelement>();
+  //public  ArrayList<String> fileLines = new ArrayList<String>();
+
+
 
 
 	public void inputReader(String fileName) {
@@ -29,6 +29,7 @@ public class Parser{
 		int constraintCounter = 0;
 		FMelement fmElement = null;
 		TNTelement tntElement = null;
+		TNPelement tnpElement = null;
 
 
 		try {
@@ -38,7 +39,8 @@ public class Parser{
 
 			while ((line = br.readLine()) != null){
 
-				while(line.isEmpty()){line = br.readLine();}
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
 
 
 
@@ -74,8 +76,8 @@ public class Parser{
 				//TODO too-near penalties will be done with a custom array list using classses
 				if (line.matches("too-near penalities[\\s]*")){
 					constraintCounter++;
+					line = readToNearPenalities(br, tnpElement, line);
 				}
-
 
 			}
 			/*if (constraintCounter != 6)
@@ -103,26 +105,28 @@ public class Parser{
 		}
 	}
 
+	
 
-	private String readToNearTask(BufferedReader br,  TNTelement tntElement, String line){
+	private String readToNearPenalities(BufferedReader br,  TNPelement tnpElement, String line){
 		int i = 0;
 		try{
-			String exitString = "too-near tasks:";
-			while (!(line = br.readLine()).equals(exitString)){
+			
+			while ((line = br.readLine()) !=null){
 
-				while(line.isEmpty()){line = br.readLine();}
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
 
-				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
+
+				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([0-9]*)\\)")).matcher(line);
 
 				if (matcher.matches()){
-
-					tntElement = new TNTelement(matcher.group(1), matcher.group(2));
-					tntArray.add(tntElement);
+					tnpElement = new TNPelement(matcher.group(1), matcher.group(2), Long.parseLong(matcher.group(3)));
+					tnpArray.add(tnpElement);
 					//  if (!fpa.containsKey(matcher.group(1)) && !fpa.containsValue(matcher.group(2)))
 					//  {
 					//  fpa.put(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					System.out.println(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo());
-					;
+					System.out.println(tnpArray.get(i).getTNPtaskOne() + " " + tnpArray.get(i).getTNPtaskTwo() + " " + tnpArray.get(i).getTNPpenalty()); 
+
 					i++;
 				}else{
 					//TODO partial assignment
@@ -136,7 +140,7 @@ public class Parser{
 				}
 
 			}
-			while(line.isEmpty()){line = br.readLine();}
+
 
 		}catch(IOException e){
 
@@ -144,30 +148,33 @@ public class Parser{
 		return line;
 	}
 
-	private String readForbiddenMachine(BufferedReader br, FMelement fmElement, String line){
+
+	private String readToNearTask(BufferedReader br,  TNTelement tntElement, String line){
 		int i = 0;
 		try{
-			String exitString = "too-near tasks:";
+			String exitString = "machine penalties:";
 			while (!(line = br.readLine()).equals(exitString)){
 
-				while(line.isEmpty()){line = br.readLine();}
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
 
-				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)")).matcher(line);
+
+				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
 
 				if (matcher.matches()){
 
-					fmElement = new FMelement(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					fpArray.add(fmElement);
+					tntElement = new TNTelement(matcher.group(1), matcher.group(2));
+					tntArray.add(tntElement);
 					//  if (!fpa.containsKey(matcher.group(1)) && !fpa.containsValue(matcher.group(2)))
 					//  {
 					//  fpa.put(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					System.out.println(fpArray.get(i).getFMachine() + " " + fpArray.get(i).getFMtask());
-					;
+					System.out.println(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo()); 
+
 					i++;
 				}else{
 					//TODO partial assignment
 					System.out.println(line);
-					System.out.println("partial error");
+					System.out.println("parsing error");
 
 					System.exit(0);
 
@@ -176,10 +183,64 @@ public class Parser{
 				}
 
 			}
-			while(line.isEmpty()){line = br.readLine();}
+
 
 		}catch(IOException e){
 
+		}
+		return line;
+	}
+
+
+	
+	
+	
+	
+	private String readMachinePenalties(BufferedReader br, String line) {
+		try {
+			String exitString = "too-near penalities";
+			while (!(line = br.readLine()).equals(exitString)) {
+				
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue; 
+				
+				Matcher matcher = Pattern.compile(("\\(([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]([0-9]*)[\\s]*")).matcher(line);
+				
+			}
+			 } catch(IOException e) {}
+		return line;
+	}
+	
+	
+	
+	
+	private String readForbiddenMachine(BufferedReader br, FMelement fmElement, String line){
+		int i = 0;
+		try{
+			String exitString = "too-near tasks:";
+			while (!(line = br.readLine()).equals(exitString)){
+
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
+
+				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
+
+				if (matcher.matches()){
+
+					fmElement = new FMelement(Integer.parseInt(matcher.group(1)), matcher.group(2));
+					fpArray.add(fmElement);
+					System.out.println(fpArray.get(i).getFMachine() + " " + fpArray.get(i).getFMtask());
+					i++;
+				}else{
+					//TODO partial assignment
+					System.out.println(line);
+					System.out.println("partial error");
+					System.exit(0);
+					return null;
+				}
+				while(line.isEmpty()){line = br.readLine();}
+			}
+		}catch(IOException e){
 		}
 		return line;
 	}
@@ -189,6 +250,7 @@ public class Parser{
 		try{
 			String exitString = "forbidden machine:";
 			while ( !(line = br.readLine()).equals(exitString) ){
+				
 				//next = brNext.readLine();
 				//System.out.println(next);
 				//br.mark();
@@ -198,7 +260,10 @@ public class Parser{
 				//if(line.equals(exitString)){
 				//br.reset();
 				//  return line;}
-				while(line.isEmpty()){line = br.readLine();}
+				
+				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
+				if (emptyCheck.matches()) continue;
+
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)")).matcher(line);
 				if (matcher.matches()){
 					if (!fpa.containsKey(matcher.group(1)) && !fpa.containsValue(matcher.group(2)))
@@ -214,11 +279,8 @@ public class Parser{
 					//TODO partial assignment
 					System.out.println(line);
 					System.out.println("partial error");
-
 					System.exit(0);
-
 					return null;
-
 				}
 			}
 		}  catch(IOException e)
@@ -229,9 +291,6 @@ public class Parser{
 		}
 		return line;
 	}
-
-
-
 
 	//TODO make buffered reader method
 	//
