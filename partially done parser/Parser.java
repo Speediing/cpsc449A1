@@ -14,7 +14,7 @@ public class Parser{
 	public static ArrayList<FMelement> fpArray = new ArrayList<FMelement>();
 	public static ArrayList<TNTelement> tntArray = new ArrayList<TNTelement>();
 	//public static ArrayList<FPArray> fpArray = new ArrayList<FPArray>();
-	public  ArrayList<TNPelement> tnpArray = new ArrayList<TNPelement>();
+	public static ArrayList<TNPelement> tnpArray = new ArrayList<TNPelement>();
   //public  ArrayList<String> fileLines = new ArrayList<String>();
 
 

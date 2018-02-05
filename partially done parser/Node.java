@@ -59,6 +59,7 @@ public class Node {
         for (String element : unused_tasks) {
 
             //CHECKS HDRE A;SLKFJAL;SKJDFGASDG;OAIHER;OIGRW;HIOWGROHIUWGROHGRWOHRWGOHWRGRWG;OWAR;OIH
+            System.out.println("TESTEST: " + assignment.toString());
 
             ArrayList<String> pass_assignment = (ArrayList<String>) assignment.clone();
             pass_assignment.add(element);
@@ -78,10 +79,6 @@ public class Node {
         }
         System.out.println("");
     }
-//    public static void main(String[] args){
-
-//
-//    }
 public static void main(String[] args){
     Parser parser = new Parser();
     parser.inputReader("inputFile.txt");
