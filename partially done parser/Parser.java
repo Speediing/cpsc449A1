@@ -1,10 +1,8 @@
 import java.util.*;
 import java.io.*;
-import java.nio.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -296,10 +294,7 @@ public class Parser{
 	//
 	//read through the file
 	//parse through each line and create each object
-	public static void main(String[] args){
-		Parser parser = new Parser();
-		parser.inputReader("inputFile.txt");
-	}
+
 }
 
 //TODO create getters for each array list DONE-----
