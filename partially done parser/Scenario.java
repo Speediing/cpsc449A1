@@ -27,9 +27,9 @@ public class Scenario {
 
     }
     public boolean isValid(){
-        for (int task =1; task<machines.size() + 1; task++){
+        for (int task =0; task<machines.size(); task++){
             int machine = this.machines.get(task);
-            FMelement assignment = new FMelement(machine, this.taskConversion.get(task));
+            FMelement assignment = new FMelement(machine, this.taskConversion.get(task+1));
             if (this.fpArray.contains(assignment)){
                 return false;
 
