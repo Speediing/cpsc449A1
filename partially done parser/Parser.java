@@ -22,7 +22,7 @@ once it is done the parser will close
 
 public class Parser {
 	//Machine penalty array
-	public int[][] MParray = new int[8][8];
+	public static int[][] MParray = new int[8][8];
 	//Forrbidden partial assignment array
 	public static HashMap<Integer, String> fpa = new HashMap<Integer, String>();
 	//forbidden machine array THERE IS A TYPO HERE THAT NEEDS TO BE FIXED
@@ -30,7 +30,7 @@ public class Parser {
 	//too near task array
 	public static ArrayList<TNTelement> tntArray = new ArrayList<TNTelement>();
 	//too near penalty array
-	public ArrayList<TNPelement> tnpArray = new ArrayList<TNPelement>();
+	public static  ArrayList<TNPelement> tnpArray = new ArrayList<TNPelement>();
 
 /**
  * reads the file line by line 
@@ -82,8 +82,8 @@ public class Parser {
 				
 				if (line.matches("forced partial assignment:[\\s]*")) {
 					constraintCounter++;
-					//passes the buffered reader(by reference thats why you dont need to return it
-					//and current line into the method so that it can continue where it left off.
+					//passes the buffered reader(by reference thats why you don't need to return it
+					//current line is also passed into the method so that it can continue where it left off.
 					//the methods return the current line so that it can continue checking for the next constraint header
 					line = readForcedPartialAssignmet(br, line);
 
