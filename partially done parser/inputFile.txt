@@ -1,0 +1,41 @@
+Name:
+iJIAODHAUhd
+
+forced partial assignment:     
+(1,A)
+(2,B)
+(3,C)
+(2,B)
+(1,A)
+(1,A)
+(2,B)
+(3,C)
+
+forbidden machine:
+(2,A)
+(2,B)
+
+too-near tasks:
+(A,B)
+(B,B)
+(D,D)
+(C,C)
+(E,F)
+(A,B)
+
+machine penalties:
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1                                  
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 2 3 4 5 3 4 7
+
+too-near penalities
+(A,C,9214312)
+(E,B,00)
+(A,H,17021939)
+(A,B,170219)
+(C,B,170219)
