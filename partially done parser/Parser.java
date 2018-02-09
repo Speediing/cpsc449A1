@@ -29,7 +29,7 @@ public class Parser {
 	// Forrbidden partial assignment array
 	public static HashMap<Integer, String> fpa = new HashMap<Integer, String>();
 	// forbidden machine array THERE IS A TYPO HERE THAT NEEDS TO BE FIXED
-	public static ArrayList<FMelement> fpArray = new ArrayList<FMelement>();
+	public static ArrayList<FMelement> fmArray = new ArrayList<FMelement>();
 	// too near task array
 	public static ArrayList<TNTelement> tntArray = new ArrayList<TNTelement>();
 	// too near penalty array
@@ -58,6 +58,8 @@ public class Parser {
 
 		// try catch
 		try {
+			boolean nameRead = false, fpaRead = false, fmRead = false, tntRead = false, mpRead = false, tnpRead = false;
+
 			// open up the file
 			FileReader fr = new FileReader(fileName);
 			// make a new buffered reader in the file
@@ -78,67 +80,91 @@ public class Parser {
 				// follows
 				// there can be no white space before though
 				if (line.matches("Name:[\\s]*")) {
-					line = readName(br, line);
-					constraintCounter++;
+					if (!nameRead) {
+						line = readName(br, line);
+						constraintCounter++;
+						nameRead = true;
+					} else {
+						break;
+					}
 					// TODO this should just check that there is a name for the file and that no
 					// funny business is going on
 					// line = readName(br, line);
 				}
 
 				if (line.matches("forced partial assignment:[\\s]*")) {
-					constraintCounter++;
-					// passes the buffered reader(by reference thats why you don't need to return it
-					// current line is also passed into the method so that it can continue where it
-					// left off.
-					// the methods return the current line so that it can continue checking for the
-					// next constraint header
-					line = readForcedPartialAssignmet(br, line);
-
+					if (nameRead) {
+						constraintCounter++;
+						// passes the buffered reader(by reference thats why you don't need to return it
+						// current line is also passed into the method so that it can continue where it
+						// left off.
+						// the methods return the current line so that it can continue checking for the
+						// next constraint header
+						fpaRead = true;
+						line = readForcedPartialAssignmet(br, line);
+					} else {
+						break;
+					}
 				}
 
 				if (line.matches("forbidden machine:[\\s]*")) {
-					constraintCounter++;
-					// passing in corresponding object for the constraint
-					line = readForbiddenMachine(br, fmElement, line);
+					if (fpaRead) {
+						constraintCounter++;
+						// passing in corresponding object for the constraint
+						line = readForbiddenMachine(br, fmElement, line);
+						fmRead = true;
+					} else {
+						break;
+					}
 
 				}
 
 				if (line.matches("too-near tasks:[\\s]*")) {
-					constraintCounter++;
-					line = readToNearTask(br, tntElement, line);
+					if (fmRead) {
+						constraintCounter++;
+						line = readToNearTask(br, tntElement, line);
+						tntRead = true;
+					} else {
+						break;
+					}
 				}
 
 				if (line.matches("machine penalties:[\\s]*")) {
-					constraintCounter++;
-					line = readMachinePenalties(br, line);
+					if (tntRead) {
+						constraintCounter++;
+						line = readMachinePenalties(br, line);
+						mpRead = true;
+					} else {
+						break;
+					}
 				}
 
 				if (line.matches("too-near penalities[\\s]*")) {
-					constraintCounter++;
+					if (mpRead)
+						constraintCounter++;
 					line = readToNearPenalities(br, tnpElement, line);
+					tnpRead = true;
+				} else {
+					break;
 				}
 
 			}
 			// checks constraint counter to see if = 6 if not err.
 			if (constraintCounter != 6) {
 
-				System.out.println("Error while parsing input file");
-				System.exit(0);
-				return;
+				Shell.constructFileOutPut(1);
 			}
 			System.out.println(constraintCounter);
 			br.close();
 		} catch (FileNotFoundException ex) {
-
+			// SHOULD THIS BE ERROR WHILE PARSING
 			System.out.println("File not found");
 			System.exit(0);
 			return;
 
 		} catch (IOException e) {
 
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return;
+			Shell.constructFileOutPut(1);
 		}
 	}
 
@@ -148,41 +174,36 @@ public class Parser {
 			String exitString = "forced partial assignment:[\\s]*";
 			int namesCounted = 0;
 			while (!(line = br.readLine()).matches(exitString)) {
-				//System.out.println(line);
+				// System.out.println(line);
 				Matcher emptyCheck = Pattern.compile("[\\s]*").matcher(line);
 				if (emptyCheck.matches()) {
 					lastLine = line;
 					continue;
 				}
-				
+
 				Matcher name = Pattern.compile(("[\\S]+")).matcher(line);
 				if (name.matches()) {
 					namesCounted++;
 				}
-				
+
 				lastLine = line;
 			}
 			if (!(lastLine.matches("([\\s]*)"))) {
-				System.out.println("Error while parsing the input file");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(1);
 			}
 			if (namesCounted != 1) {
-				System.out.println(namesCounted);
-				System.out.println("Error while parsing the input file penis");
-				System.exit(0);
-				return null;
+				// System.out.println(namesCounted);
+				Shell.constructFileOutPut(1);
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
+		} catch (NullPointerException e) {
+			Shell.constructFileOutPut(1);
 		}
 
 		return line;
 	}
-	
-	
+
 	/**
 	 * reads the too near penalties, checking to see if any task is outside the
 	 * specified range as well as any invalid input using reg. expression
@@ -196,7 +217,9 @@ public class Parser {
 	 * @return
 	 */
 	private String readToNearPenalities(BufferedReader br, TNPelement tnpElement, String line) {
-
+		String task1;
+		String task2;
+		String penalty;
 		try {
 
 			while ((line = br.readLine()) != null) {
@@ -210,27 +233,59 @@ public class Parser {
 				// anything that disagrees with these gets tossed
 				// (.*) reads any possible character its there cause we don't really care about
 				// what's there for those error checks
-				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([0-9]+)\\)")).matcher(line);
-				Matcher invalidTaskOne = Pattern.compile(("\\(([i-zI-Z]),([A-H]),(.*)\\)")).matcher(line);
-				Matcher invalidTaskTwo = Pattern.compile(("\\(([A-H]),([i-zI-Z]),(.*)\\)")).matcher(line);
-				Matcher invalidTaskAll = Pattern.compile(("\\(([i-zI-Z]),([i-zI-Z]),(.*)\\)")).matcher(line);
-				Matcher invalidPenalty = Pattern.compile(("\\((.*),(.*),([0-9]+)\\)")).matcher(line);
-
-				// taskone != A-H or tasktwo != A-H or task one and two != A-H
-				if (invalidTaskOne.matches() || invalidTaskTwo.matches() || invalidTaskAll.matches()) {
-
-					System.out.println("invalid task");
-					System.exit(0);
-					return null;
+				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([1-9][1-9]*)\\)[\\s]*")).matcher(line);
+				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
+				
+						
+				
+				System.out.println(line);
+				
+			if (format.matches()) {
+				
+				
+				
+				if(!(format.group(1)).matches("[A-H]")) {
+					System.out.println("task1");
+					Shell.constructFileOutPut(5);
 				}
-				if (!(invalidPenalty.matches())) {
-					System.out.println("invalid penalty");
-					System.exit(0);
-					return null;
+				
+			
+			
+				else if(!(format.group(3)).matches("[A-H]")) {
+					System.out.println("task2");
+					Shell.constructFileOutPut(5);
+				}
+				
+				
+				else if (!(format.group(5)).matches("[\\d*]")) {
+					System.out.println("penalty");
+					Shell.constructFileOutPut(6);
+				}
+					/*if (format.group(1).matches("([A-H]{2,}+[^A-H]+)")) {
+						System.out.println(" ");
+						System.out.println("task1");
+						Shell.constructFileOutPut(5);}*/
+					/*// taskone != A-H or tasktwo != A-H or task one and two != A-H
+					if ((invalidTaskOne.matches() || invalidAH.matches() || invalidA.matches()) && !invalidWS.matches()) {
+						//System.out.println()
+
+						System.out.println("task1");
+						Shell.constructFileOutPut(5);
+					}
+					if (invalidTaskTwo.matches() && !(invalidWS2.matches())) {
+
+						System.out.println("task2");
+						Shell.constructFileOutPut(5);
+					}
+					if ((invalidPenalty.matches() && (invalidWS3.matches()))) {
+						System.out.println("penalty");
+						Shell.constructFileOutPut(6);
+					} 
+				}*/
 				}
 				// if the tnt follows the correct formatting then put it in the array
 				if (matcher.matches()) {
-
+					
 					// TESTING
 					// System.out.println(tnpArray.size());
 
@@ -239,7 +294,7 @@ public class Parser {
 					// checks if the array is empty if it is it puts the first value it sees in
 					if (tnpArray.size() == 0) {
 						tnpElement = new TNPelement(matcher.group(1), matcher.group(2),
-								Long.parseLong(matcher.group(3)));
+								Integer.parseInt(matcher.group(3)));
 						tnpArray.add(tnpElement);
 
 						/*
@@ -261,7 +316,7 @@ public class Parser {
 
 							if (taskOne.equals(matcher.group(1)) && taskTwo.equals(matcher.group(2))) {
 
-								tnpArray.get(j).setTNPpenalty(Long.parseLong(matcher.group(3)));
+								tnpArray.get(j).setTNPpenalty(Integer.parseInt(matcher.group(3)));
 								// if the value is updated then this gets turned and no new thing is added to
 								// the array
 								penaltyChanged = true;
@@ -276,7 +331,7 @@ public class Parser {
 							continue;
 
 						tnpElement = new TNPelement(matcher.group(1), matcher.group(2),
-								Long.parseLong(matcher.group(3)));
+								Integer.parseInt(matcher.group(3)));
 						tnpArray.add(tnpElement);
 
 						/*
@@ -287,20 +342,13 @@ public class Parser {
 					}
 					// if format is wrong exit
 				} else {
-					System.out.println("Error while parsing the input file");
-
-					System.exit(0);
-
-					return null;
-
-				}
-
+					System.out.println("parse");
+					Shell.constructFileOutPut(1);
+				
 			}
-
+			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
 		}
 		// TESTING COMMENT THIS OuT WHEN DONE
 		for (int x = 0; x < tnpArray.size(); x++) {
@@ -325,16 +373,42 @@ public class Parser {
 					lastLine = line;
 					continue;
 				}
-
-				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
-				Matcher invalidTaskOne = Pattern.compile(("\\(([^A-H]),([A-H])\\)")).matcher(line);
-				Matcher invalidTaskTwo = Pattern.compile(("\\(([A-H]),([^A-H])\\)")).matcher(line);
-				Matcher invalidTaskAll = Pattern.compile(("\\(([^A-H]),([^A-H])\\)")).matcher(line);
-				if (invalidTaskOne.matches() || invalidTaskTwo.matches() || (invalidTaskAll.matches())) {
-					System.out.println("invalid machine/task");
-					System.exit(0);
-					return null;
+				
+				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)[\\s]*")).matcher(line);
+				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
+				
+						
+				
+				System.out.println(line);
+				
+				if (format.matches()) {
+				
+			
+				
+				if(!(format.group(1)).matches("[A-H]")) {
+					Shell.constructFileOutPut(3);
 				}
+				
+			
+			
+				else if(!(format.group(3)).matches("[A-H]")) {
+					System.out.println("task2");
+					Shell.constructFileOutPut(3);
+				}
+				
+				}
+			/*	else if (!(format.group(5)).matches("[\\d*]")) {
+					System.out.println("penalty");
+					Shell.constructFileOutPut(6);*/
+					
+			/*	Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
+				Matcher invalidTaskOne = Pattern.compile(("\\(([^A-H]*),([A-H])\\)")).matcher(line);
+				Matcher invalidTaskTwo = Pattern.compile(("\\(([A-H]),([^A-H]*)\\)")).matcher(line);
+				Matcher invalidTaskAll = Pattern.compile(("\\(([^A-H]*),([^A-H]*)\\)")).matcher(line);
+				if (invalidTaskOne.matches() || invalidTaskTwo.matches() || (invalidTaskAll.matches())) {
+					
+					Shell.constructFileOutPut(3);
+				}*/
 
 				if (matcher.matches()) {
 
@@ -349,24 +423,17 @@ public class Parser {
 					i++;
 				} else {
 					// TODO partial assignment
-					System.out.println("Error while parsing the input file");
-					System.exit(0);
-
-					return null;
+					Shell.constructFileOutPut(1);
 
 				}
 
 				lastLine = line;
 			}
 			if (!(lastLine.matches("([\\s]*)"))) {
-				System.out.println("Error while parsing the input file ");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(1);
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
 		}
 		/*
 		 * catch(IllegalStateException e) { System.out.println("invalid machine/task");
@@ -411,28 +478,20 @@ public class Parser {
 				lineCopy = lineCopy.replace(" ", ".");
 				String[] splitter = lineCopy.split("\\.");
 				if (splitter.length < 8) {
-					System.out.println("machine penalty error");
-					System.exit(0);
-					return null;
+					Shell.constructFileOutPut(4);
 				}
 				if (i > 7) {
-					System.out.println("machine penalty error");
-					System.exit(0);
-					return null;
+					Shell.constructFileOutPut(4);
 				}
 
 				for (int j = 0; j < splitter.length; j++) {
 					// System.out.println(splitter.length);
 					if (j > 7) {
-						System.out.println("machine penalty error");
-						System.exit(0);
-						return null;
+						Shell.constructFileOutPut(4);
 
 					}
 					if (Integer.parseInt(splitter[j]) < 0) {
-						System.out.println("invalid penalty");
-						System.exit(0);
-						return null;
+						Shell.constructFileOutPut(6);
 					}
 					MParray[i][j] = Integer.parseInt(splitter[j]);
 					// System.out.println(MParray[i][j]);
@@ -447,28 +506,20 @@ public class Parser {
 				// }
 			}
 			if (!(lastLine.matches("([\\s]*)"))) {
-				System.out.println("Error while parsing the input file");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(1);
 			}
 			System.out.println(Arrays.deepToString(MParray) + "\n");
 			if (i < 8) {
-				System.out.println("machine penalty error");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(4);
 			}
 
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
 		} /*
 			 * catch (ArrayIndexOutOfBoundsException exception) {
 			 * System.out.print("machine penalty error"); System.exit(0); return null; }
 			 */catch (NumberFormatException e) {
-			System.out.print("invalid penalty");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(6);
 		}
 
 		return line;
@@ -486,43 +537,63 @@ public class Parser {
 					lastLine = line;
 					continue;
 				}
-
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
-				Matcher invalidTask = Pattern.compile(("\\(([1-8]),([^A-H])\\)[\\s]*")).matcher(line);
-				Matcher invalidMach = Pattern.compile(("\\(([^1-8]),([A-H])\\)[\\s]*")).matcher(line);
-				Matcher invalidAll = Pattern.compile(("\\(([^1-8]),([^A-H])\\)[\\s]*")).matcher(line);
+				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
+				
+						
+				
+				System.out.println(line);
+				
+				if (format.matches()) {
+				
+				
+				
+				if(!(format.group(1)).matches("[1-8]")) {
+					//System.out.println("task1");
+					Shell.constructFileOutPut(3);
+				}
+				
+			
+			
+				else if(!(format.group(3)).matches("[A-H]")) {
+					//System.out.println("task2");
+					Shell.constructFileOutPut(3);
+				}
+				
+				
+				/*else if (!(format.group(5)).matches("[\\d*]")) {
+					System.out.println("penalty");
+					Shell.constructFileOutPut(6);
+				}*/}
+/*
+				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
+				Matcher invalidTask = Pattern.compile(("\\(([1-8]),([^A-H]*)\\)[\\s]*")).matcher(line);
+				Matcher invalidMach = Pattern.compile(("\\(([^1-8]*),([A-H])\\)[\\s]*")).matcher(line);
+				Matcher invalidAll = Pattern.compile(("\\(([^1-8]*),([^A-H]*)\\)[\\s]*")).matcher(line);
 
 				if (invalidTask.matches() || invalidMach.matches() || (invalidAll.matches())) {
-					System.out.println("invalid machine/task");
-					System.exit(0);
-					return null;
+					Shell.constructFileOutPut(3);
 
-				}
+				}*/
 				if (matcher.matches()) {
 
 					fmElement = new FMelement(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					fpArray.add(fmElement);
-					System.out.println(fpArray.get(i).getFMachine() + " " + fpArray.get(i).getFMtask());
+					fmArray.add(fmElement);
+					System.out.println(fmArray.get(i).getFMachine() + " " + fmArray.get(i).getFMtask());
 					i++;
 				}
 
 				else {
 					// TODO partial assignment
-					System.out.println("Error while parsing the input file");
-					System.exit(0);
-					return null;
+					Shell.constructFileOutPut(1);
 				}
 				lastLine = line;
 			}
 			if (!(lastLine.matches("([\\s]*)"))) {
-				System.out.println("Error while parsing the input file");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(1);
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
 		}
 		/*
 		 * catch(IllegalStateException e) { System.out.println("invalid machine/task");
@@ -565,7 +636,28 @@ public class Parser {
 				 * line);
 				 */
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
-
+				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
+				
+						
+				
+				System.out.println(line);
+				
+				if (format.matches()) {
+				
+				
+				
+				if(!(format.group(1)).matches("[1-8]")) {
+					//System.out.println("task1");
+					Shell.constructFileOutPut(3);
+				}
+				
+			
+			
+				else if(!(format.group(3)).matches("[A-H]")) {
+					//System.out.println("task2");
+					Shell.constructFileOutPut(3);
+				}
+				}
 				if (matcher.matches()) {
 					key = Integer.parseInt(matcher.group(1));
 					value = matcher.group(2);
@@ -587,9 +679,7 @@ public class Parser {
 
 					else {
 
-						System.out.println("partial assignment error");
-						System.exit(0);
-						return null;
+						Shell.constructFileOutPut(2);
 					}
 
 				}
@@ -601,21 +691,15 @@ public class Parser {
 				 */
 				else {
 					// TODO partial assignment
-					System.out.println("Error while parsing the input file");
-					System.exit(0);
-					return null;
+					Shell.constructFileOutPut(1);
 				}
 				lastLine = line;
 			}
 			if (!(lastLine.matches("([\\s]*)"))) {
-				System.out.println("Error while parsing the input file");
-				System.exit(0);
-				return null;
+				Shell.constructFileOutPut(1);
 			}
 		} catch (IOException e) {
-			System.out.println("Error while parsing the input file");
-			System.exit(0);
-			return null;
+			Shell.constructFileOutPut(1);
 		}
 
 		return line;
