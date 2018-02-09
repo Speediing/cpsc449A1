@@ -52,15 +52,11 @@ public class Shell{
   }
   
 	public static void constructFileOutPut(int messageNumber) {
-		String[] args = new String[2];
-		args[1] = "outputfile.txt";
 		String messageToOutPut = messageAssigner(messageNumber);
 		makeOutPutFile(args[1], messageToOutPut);
 	}
 	
 	public static void constructFileOutPut(String validSolution) {
-		String[] args = new String[2];
-		args[1] = "outputfile.txt";
 		makeOutPutFile(args[1], validSolution);
 	}
 	
