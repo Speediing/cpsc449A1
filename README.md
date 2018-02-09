@@ -13,3 +13,5 @@ As an example, the following will generate a file called
 output.txt if sample.txt is a valid set of constraints:
 
  $ java shell sample.txt output.txt
+ 
+ ## Written by : Jason Wiker, Tony Dong, Patrick Gharib, Jesus Cuadra, Tariq Rahmani
