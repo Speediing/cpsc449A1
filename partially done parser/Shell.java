@@ -10,7 +10,11 @@ public class Shell{
   
   public static void main(String[] args){
 	  
-	 
+	if (args.length != 2) { 
+		
+		System.exit(0);
+		return;
+	}
 	 
     Parser ps = new Parser();
     ps.inputReader(args[0]);
@@ -94,6 +98,8 @@ public class Shell{
 			System.err.println("Error writing to File");
 		} catch (NullPointerException e) {
 			System.err.println("Error writing to File");
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		System.out.println("file was created");
 		System.exit(0);

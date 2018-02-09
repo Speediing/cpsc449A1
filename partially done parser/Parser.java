@@ -233,12 +233,10 @@ public class Parser {
 				// anything that disagrees with these gets tossed
 				// (.*) reads any possible character its there cause we don't really care about
 				// what's there for those error checks
-				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([1-9][1-9]*)\\)[\\s]*")).matcher(line);
+				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([0]*|[0]*[1-9][0-9]*)\\)[\\s]*")).matcher(line);
 				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
 				
 						
-				
-				System.out.println(line);
 				
 			if (format.matches()) {
 				
@@ -257,7 +255,7 @@ public class Parser {
 				}
 				
 				
-				else if (!(format.group(5)).matches("[\\d*]")) {
+				else if (!(format.group(5)).matches("[0]*|[0]*[1-9][0-9]*")) {
 					System.out.println("penalty");
 					Shell.constructFileOutPut(6);
 				}

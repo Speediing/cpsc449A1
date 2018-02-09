@@ -19,11 +19,11 @@ public class Node {
         unused_tasks.add("A");
         unused_tasks.add("B");
         unused_tasks.add("C");
-        //unused_tasks.add("D");
-        //unused_tasks.add("E");
-        //unused_tasks.add("F");
-        //unused_tasks.add("G");
-        //unused_tasks.add("H");
+        unused_tasks.add("D");
+        unused_tasks.add("E");
+        unused_tasks.add("F");
+        unused_tasks.add("G");
+        unused_tasks.add("H");
 
         for (String element : unused_tasks) {
 
