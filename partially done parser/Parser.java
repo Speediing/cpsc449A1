@@ -38,7 +38,7 @@ public class Parser {
 	/**
 	 * reads the file line by line continuously sorts information to there
 	 * respective storage places
-	 * 
+	 *
 	 * @param fileName
 	 *            string containing the name of the file to be parsed
 	 */
@@ -154,7 +154,7 @@ public class Parser {
 
 				Shell.constructFileOutPut(1);
 			}
-			System.out.println(constraintCounter);
+			 //System.out.println(constraintCounter);
 			br.close();
 		} catch (FileNotFoundException ex) {
 			// SHOULD THIS BE ERROR WHILE PARSING
@@ -207,7 +207,7 @@ public class Parser {
 	/**
 	 * reads the too near penalties, checking to see if any task is outside the
 	 * specified range as well as any invalid input using reg. expression
-	 * 
+	 *
 	 * @param br
 	 *            reference to the buffered reader
 	 * @param tnpElement
@@ -235,28 +235,28 @@ public class Parser {
 				// what's there for those error checks
 				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H]),([0]*|[0]*[1-9][0-9]*)\\)[\\s]*")).matcher(line);
 				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
-				
-						
-				
+
+
+
 			if (format.matches()) {
-				
-				
-				
+
+
+
 				if(!(format.group(1)).matches("[A-H]")) {
-					System.out.println("task1");
+					 //System.out.println("task1");
 					Shell.constructFileOutPut(5);
 				}
-				
-			
-			
+
+
+
 				else if(!(format.group(3)).matches("[A-H]")) {
-					System.out.println("task2");
+					 //System.out.println("task2");
 					Shell.constructFileOutPut(5);
 				}
-				
-				
+
+
 				else if (!(format.group(5)).matches("[0]*|[0]*[1-9][0-9]*")) {
-					System.out.println("penalty");
+					 //System.out.println("penalty");
 					Shell.constructFileOutPut(6);
 				}
 					/*if (format.group(1).matches("([A-H]{2,}+[^A-H]+)")) {
@@ -278,12 +278,12 @@ public class Parser {
 					if ((invalidPenalty.matches() && (invalidWS3.matches()))) {
 						System.out.println("penalty");
 						Shell.constructFileOutPut(6);
-					} 
+					}
 				}*/
 				}
 				// if the tnt follows the correct formatting then put it in the array
 				if (matcher.matches()) {
-					
+
 					// TESTING
 					// System.out.println(tnpArray.size());
 
@@ -340,19 +340,19 @@ public class Parser {
 					}
 					// if format is wrong exit
 				} else {
-					System.out.println("parse");
+					 //System.out.println("parse");
 					Shell.constructFileOutPut(1);
-				
+
 			}
 			}
 		} catch (IOException e) {
 			Shell.constructFileOutPut(1);
 		}
 		// TESTING COMMENT THIS OuT WHEN DONE
-		for (int x = 0; x < tnpArray.size(); x++) {
+		/*for (int x = 0; x < tnpArray.size(); x++) {
 			System.out.println(tnpArray.get(x).getTNPtaskOne() + " " + tnpArray.get(x).getTNPtaskTwo() + " "
 					+ tnpArray.get(x).getTNPpenalty());
-		}
+		}*/
 		return line;
 	}
 
@@ -371,40 +371,40 @@ public class Parser {
 					lastLine = line;
 					continue;
 				}
-				
+
 				Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)[\\s]*")).matcher(line);
 				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
-				
-						
-				
-				System.out.println(line);
-				
+
+
+
+				 //System.out.pr(intln(line);
+
 				if (format.matches()) {
-				
-			
-				
+
+
+
 				if(!(format.group(1)).matches("[A-H]")) {
 					Shell.constructFileOutPut(3);
 				}
-				
-			
-			
+
+
+
 				else if(!(format.group(3)).matches("[A-H]")) {
-					System.out.println("task2");
+					 //System.out.pr(intln("task2");
 					Shell.constructFileOutPut(3);
 				}
-				
+
 				}
 			/*	else if (!(format.group(5)).matches("[\\d*]")) {
 					System.out.println("penalty");
 					Shell.constructFileOutPut(6);*/
-					
+
 			/*	Matcher matcher = Pattern.compile(("\\(([A-H]),([A-H])\\)")).matcher(line);
 				Matcher invalidTaskOne = Pattern.compile(("\\(([^A-H]*),([A-H])\\)")).matcher(line);
 				Matcher invalidTaskTwo = Pattern.compile(("\\(([A-H]),([^A-H]*)\\)")).matcher(line);
 				Matcher invalidTaskAll = Pattern.compile(("\\(([^A-H]*),([^A-H]*)\\)")).matcher(line);
 				if (invalidTaskOne.matches() || invalidTaskTwo.matches() || (invalidTaskAll.matches())) {
-					
+
 					Shell.constructFileOutPut(3);
 				}*/
 
@@ -416,7 +416,7 @@ public class Parser {
 					// !fpa.containsValue(matcher.group(2)))
 					// {
 					// fpa.put(Integer.parseInt(matcher.group(1)), matcher.group(2));
-					System.out.println(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo());
+					 //System.out.pr(intln(tntArray.get(i).getTNTtaskOne() + " " + tntArray.get(i).getTNTtaskTwo());
 
 					i++;
 				} else {
@@ -468,7 +468,7 @@ public class Parser {
 				 * Matcher matcher = Pattern.compile(
 				 * ("([0-9]*) ([0-9]*) ([0-9]*) ([0-9]*) ([0-9]*) ([0-9]*) ([0-9]*) ([0-9]*)[\\s]*"
 				 * )).matcher(line);
-				 * 
+				 *
 				 * if (matcher.matches()) { // System.out.println(lineCopy);
 				 */
 
@@ -506,7 +506,7 @@ public class Parser {
 			if (!(lastLine.matches("([\\s]*)"))) {
 				Shell.constructFileOutPut(1);
 			}
-			System.out.println(Arrays.deepToString(MParray) + "\n");
+			 //System.out.pr(intln(Arrays.deepToString(MParray) + "\n");
 			if (i < 8) {
 				Shell.constructFileOutPut(4);
 			}
@@ -537,28 +537,28 @@ public class Parser {
 				}
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
 				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
-				
-						
-				
-				System.out.println(line);
-				
+
+
+
+				 //System.out.pr(intln(line);
+
 				if (format.matches()) {
-				
-				
-				
+
+
+
 				if(!(format.group(1)).matches("[1-8]")) {
 					//System.out.println("task1");
 					Shell.constructFileOutPut(3);
 				}
-				
-			
-			
+
+
+
 				else if(!(format.group(3)).matches("[A-H]")) {
 					//System.out.println("task2");
 					Shell.constructFileOutPut(3);
 				}
-				
-				
+
+
 				/*else if (!(format.group(5)).matches("[\\d*]")) {
 					System.out.println("penalty");
 					Shell.constructFileOutPut(6);
@@ -577,7 +577,7 @@ public class Parser {
 
 					fmElement = new FMelement(Integer.parseInt(matcher.group(1)), matcher.group(2));
 					fmArray.add(fmElement);
-					System.out.println(fmArray.get(i).getFMachine() + " " + fmArray.get(i).getFMtask());
+					//System.out.println(fmArray.get(i).getFMachine() + " " + fmArray.get(i).getFMtask());
 					i++;
 				}
 
@@ -635,22 +635,22 @@ public class Parser {
 				 */
 				Matcher matcher = Pattern.compile(("\\(([1-8]),([A-H])\\)[\\s]*")).matcher(line);
 				Matcher format = Pattern.compile(("\\(([^\\s]([\\S]*[\\s]*[\\S]*)*),([^\\s]([\\S]*[\\s]*[\\S]*)*)\\)[\\s]*")).matcher(line);
-				
-						
-				
-				System.out.println(line);
-				
+
+
+
+				 //System.out.pr(intln(line);
+
 				if (format.matches()) {
-				
-				
-				
+
+
+
 				if(!(format.group(1)).matches("[1-8]")) {
 					//System.out.println("task1");
 					Shell.constructFileOutPut(3);
 				}
-				
-			
-			
+
+
+
 				else if(!(format.group(3)).matches("[A-H]")) {
 					//System.out.println("task2");
 					Shell.constructFileOutPut(3);

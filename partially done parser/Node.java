@@ -38,7 +38,7 @@ public class Node {
             branches.add(new Node(pass_assignment, pass_unused, depth + 1, penalty));
         }
     }
-    
+
 
     //constructor for the non-root node. Used for all node generation after the root.
     //behaves similarly to root constructor except it recieves it's values from the previous node
@@ -48,14 +48,14 @@ public class Node {
         unused_tasks = input_unused;
         depth = input_depth;
         penalty = Softconstraints.penaltyValue(assignment);
-        
-        if(depth>0) {
-        	System.out.println("NODE depth: "+depth);
-        	printlist(assignment);
-        	printlist(unused_tasks);
-        	System.out.println("pen: "+penalty);
-        }
-        
+
+        //if(depth>0) {
+        	//System.out.println("NODE depth: "+depth);
+        	//printlist(assignment);
+        	//printlist(unused_tasks);
+        	//System.out.println("pen: "+penalty);
+        //}
+
         //if last node
         if(depth==8) {
         	if(Shell.min_pen==-1) {
@@ -67,18 +67,18 @@ public class Node {
         		Shell.min_list = assignment;
         	}
         }
-        
+
         for (String element : unused_tasks) {
-        	
+
         	if(HardConstraints.check(assignment)&&(penalty < Shell.min_pen||Shell.min_pen<0)) {
-        		
+
                 ArrayList<String> pass_assignment = (ArrayList<String>) assignment.clone();
                 pass_assignment.add(element);
                 ArrayList<String> pass_unused = (ArrayList<String>) unused_tasks.clone();
                 pass_unused.remove(element);
 
                 branches.add(new Node(pass_assignment, pass_unused, depth+1, penalty));
-        	}     	
+        	}
         }
     }
 
