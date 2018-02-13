@@ -9,7 +9,6 @@ public class Shell{
   //global variables holding penalties probably?
  	public static String[] args1 = new String[2];
   public static void main(String[] args){
-
 	args1 = args;
 	if (args.length != 2) {
 
@@ -19,7 +18,8 @@ public class Shell{
 
     Parser ps = new Parser();
     ps.inputReader(args[0]);
-
+	
+	System.out.println(Parser.fmArray);
     Node root = new Node();
 
     System.out.println("FINAL PENALTY HERE: "+min_pen);

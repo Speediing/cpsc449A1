@@ -57,7 +57,7 @@ public class Node {
         //}
 
         //if last node
-        if(depth==8) {
+        if(depth==9) {
         	if(Shell.min_pen==-1) {
         		Shell.min_pen = penalty;
         		Shell.min_list = assignment;
