@@ -497,7 +497,11 @@ public class Parser {
 
 				lineCopy = line;
 				// lineCopy = lineCopy.replace(" ", "");
-				String[] splitter = lineCopy.split("\\s+");
+				Matcher matcher = Pattern.compile("([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]([\\S]*)[\\s]*").matcher(line);
+				if (!matcher.matches()) {
+					Shell.constructFileOutPut(4);
+				}
+				String[] splitter = lineCopy.split("[\\s]");
 				if (splitter.length < 8) {
 
 					Shell.constructFileOutPut(4);
