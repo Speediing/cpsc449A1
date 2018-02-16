@@ -29,20 +29,20 @@
 		 boolean isValid = true;
 		 
 		 int getme = assignment.size() - 1;
-		 System.out.println(getme);
+		 //System.out.println(getme);
 		 
 		 isValid = HardConstraints.forcedPartialAssignment(getme, assignment, isValid);
-		 System.out.println("isvalid: " + isValid);
+		 //System.out.println("isvalid: " + isValid);
 		 
 		 if (isValid == false) return isValid;
 		
 		 isValid = HardConstraints.forbiddenMachine(getme, assignment, isValid);
-		 System.out.println("isvalid: " + isValid);
+		 //System.out.println("isvalid: " + isValid);
 		 
 		 if (isValid == false) return isValid;
 		 
 		 isValid = HardConstraints.tooNearTasks(getme, assignment, isValid);
-		 System.out.println("isvalid: " + isValid);
+		 //System.out.println("isvalid: " + isValid);
 		 
 		 return isValid;
 		 
@@ -56,7 +56,7 @@
 	  * checked and checks if it includes the forced assignments, returns false if it does not.
 	  */
 	 public static boolean forcedPartialAssignment (int GETME, ArrayList<String> assignment, boolean isValid) {
-		 System.out.println("fp");
+		 //System.out.println("fp");
 		 String taskGiven = assignment.get(GETME);
 		 //System.out.println("getme: " + GETME + " , taskGiven: " + taskGiven);
 		 
@@ -79,9 +79,9 @@
 	  * checked and checks if it includes the forbidden machines, returns false if it does.
 	  */
 	 public static boolean forbiddenMachine (int getme, ArrayList<String> assignment, boolean isValid) {
-		 System.out.println("fm");
+		 //System.out.println("fm");
 		 String taskGiven = assignment.get(getme);
-		 System.out.println("taskGiven: " + taskGiven + " getme: " + getme);
+		 //System.out.println("taskGiven: " + taskGiven + " getme: " + getme);
 
 		 for (FMelement element : Parser.fmArray) {
 			 //System.out.println("kms");
@@ -109,12 +109,12 @@
 	  * checked and checks if it includes the too near tasks, returns false if it does.
 	  */
 	 public static boolean tooNearTasks (int getme, ArrayList<String> assignment, boolean isValid) {
-		 System.out.println("tnt");
+		 //System.out.println("tnt");
 		 String taskGiven2 = assignment.get(getme);
 		 
 		 int prevIndex = getme - 1;
 		 if (prevIndex == -1) {
-			 System.out.println("he");
+			 //System.out.println("he");
 			 return isValid;
 		 }
 		 
@@ -126,9 +126,9 @@
 			 //System.out.println("task1: " + task1 + ", task2: " + task2);
 			 
 			 if (task2.equals(taskGiven2)) {
-				 System.out.println("kms");
+				 //System.out.println("kms");
 				 if (task1.equals(taskGiven1)) { 
-					 System.out.println("kys");
+					 //System.out.println("kys");
 					 isValid = false;
 				 }
 			 }
