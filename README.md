@@ -1,5 +1,5 @@
 # cpsc449A1
-All files are in the "partially done parser" folder
+All files are in the "ITWORKS" folder
 To run this program, compile shell.java:
 
  $ javac shell.java
